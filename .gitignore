@@ -130,3 +130,6 @@ dmypy.json
 
 # Pycharm metadata
 .idea
+
+# Test files
+*test.txt
