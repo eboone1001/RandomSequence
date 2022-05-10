@@ -2,8 +2,8 @@
 ### High priority
 1. Script functionality
    1. Sequence Generator object
-      1. Read in table to create alphabet and frequencies
-      2. Or just use dictionary
+      /1. Read in table to create alphabet and frequencies
+      /2. Or just use dictionary
    2. Member function to call on generator object that generates sequences
       1. Takes in dictionary, or dictionary like file to get letter freqs.
       2. Options for standard DNA, protien, binary, decimal sequences

@@ -13,9 +13,32 @@ class RandomGenerator:
     alphabet = {}
     counts = []
 
-    def __init__(self, alphabet_dict, default_mode="none"):
-        self.alphabet = alphabet_dict
-        counts = np.zeros(len(self.alphabet))
+    def __init__(self, alphabet_dict=None, filepath=None, default_mode="none"):
+        default_mode = default_mode.lower()
+        if default_mode in "dna":
+            self.alphabet = default_DNA
+        elif default_mode in ["aa","protien"]:
+            self.alphabet = default_AA
+        elif default_mode in "binary":
+            self.alphabet = default_BINARY
+        else:
+            if alphabet_dict is None:
+                self.alphabet = RandomGenerator._get_alphabet_from_file(filepath)
+            elif filepath is None:
+                self.alphabet = alphabet_dict
+            else:
+                raise IOError
+
+        
+        counts = [0] * len(alphabet_dict)
+
+
+    def _generate_multiple_sequence(self, num_sequences, length):
+        sequences = []
+        for i in range(0, num_sequences):
+            sequences.append(self._generate_single_sequence(length))
+
+        return sequences
 
     # Functions for generating sequences
     def _generate_single_sequence(self, length):
@@ -45,39 +68,40 @@ class RandomGenerator:
 
                 return char
 
-def get_alphabet_from_file(filepath):
-    """
-    Reads in a file to create a dictionary compatible with the RandomGenerator object. Keeps a count
-    of all values passed through it: this allows for input file to have entries of char:count or char:freq,
-    as counts will be converted to freq, and frequencies will be divided by 1.
-    TODO: Consider adding a warning message to let the user know if they get a float total_count, in case of input mistake
-    :param filepath:
-    :param sep:
-    :return: alphabet dictionary
-    """
 
-    input_file = open(filepath, "r")
-    rows = input_file.readlines()
-    input_file.close()
+    @staticmethod
+    def _get_alphabet_from_file(filepath):
+        """
+        Reads in a file to create a dictionary compatible with the RandomGenerator object. Keeps a count
+        of all values passed through it: this allows for input file to have entries of char:count or char:freq,
+        as counts will be converted to freq, and frequencies will be divided by 1.
+        TODO: Consider adding a warning message to let the user know if they get a float total_count, in case of input mistake
+        :param filepath:
+        :param sep:
+        :return: alphabet dictionary
+        """
 
-    total_count = 0
-    char_count_tuples = []
-    alphabet = {}
+        input_file = open(filepath, "r")
+        rows = input_file.readlines()
+        input_file.close()
 
-    for row in rows:
-        values = row.split()
-        char_count_tuples.append((values[0], float(values[1])))
-        total_count += float(values[1])
+        total_count = 0
+        char_count_tuples = []
+        alphabet = {}
 
-    for char, count in char_count_tuples:
-        freq = count/total_count
-        alphabet[char] = freq
+        for row in rows:
+            values = row.split()
+            char_count_tuples.append((values[0], float(values[1])))
+            total_count += float(values[1])
 
-    return alphabet
+        for char, count in char_count_tuples:
+            freq = count/total_count
+            alphabet[char] = freq
+
+        return alphabet
 
 # For testing
 if __name__ == "__main__":
 
-    AT_rich_sequence = get_alphabet_from_file("input_test.txt")
-    coin_flipper = RandomGenerator(AT_rich_sequence)
+    coin_flipper = RandomGenerator("input_test.txt")
     print(coin_flipper._generate_single_sequence(10))
