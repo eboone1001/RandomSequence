@@ -7,7 +7,6 @@ import sys
 #Global variables
 nucs = ["A", "C", "G", "T"]
 
-
 def generate_random_reference(numSeq, lenSeq):
 
     nucs = ["A", "C", "G", "T"]
