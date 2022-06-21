@@ -1,4 +1,5 @@
 import random as rand
+import sys
 
 # Global varables
 # Default alphabets
@@ -147,4 +148,25 @@ def generate_sequence(length_x_number, alphabet_dict=None, filepath=None, defaul
 # For testing
 if __name__ == "__main__":
 
+    # ----- This chunk of code is for processing command line arguments ---------------------------
+    argumentList = sys.argv[1:]
+    print(argumentList)
+    options = "f:p:"
+    try:
+        arguments, values = getopt.getopt(argumentList, options)
+        filename = ""
+
+        for currArg, currVal in arguments:
+            if currArg in "-f":
+                print("Input file: " + currVal)
+                filename = currVal
+
+            elif currArg in "-p":
+                print("Using Preset: " + currVal)
+                match = float(currVal)
+
+    except getopt.error as err:
+        print("Command failed... USAGE: ")
+        print("python locAL.py -i <seqfiles> -m <match (int)> -s <mismatch(int)> -d <indel(int)> -a")
+    # -------- Command line processing complete ---------------------------------------------------
     print(generate_sequence((10, 5), alphabet_dict={'a': .01, 'b': .03}))
