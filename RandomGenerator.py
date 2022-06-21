@@ -1,3 +1,4 @@
+import getopt
 import random as rand
 import sys
 
@@ -149,24 +150,35 @@ def generate_sequence(length_x_number, alphabet_dict=None, filepath=None, defaul
 if __name__ == "__main__":
 
     # ----- This chunk of code is for processing command line arguments ---------------------------
+    filepath = ""
+    preset = ""
+
     argumentList = sys.argv[1:]
-    print(argumentList)
     options = "f:p:"
     try:
         arguments, values = getopt.getopt(argumentList, options)
-        filename = ""
+
+        num_chars = int(argumentList[0])
+        num_lines = int(argumentList[1])
 
         for currArg, currVal in arguments:
             if currArg in "-f":
                 print("Input file: " + currVal)
-                filename = currVal
+                filepath = currVal
 
             elif currArg in "-p":
                 print("Using Preset: " + currVal)
-                match = float(currVal)
+                preset = currVal
 
     except getopt.error as err:
-        print("Command failed... USAGE: ")
-        print("python locAL.py -i <seqfiles> -m <match (int)> -s <mismatch(int)> -d <indel(int)> -a")
+        print("Command failed...USAGE: ")
+        print("python RandomGenerator.py (# of Chars/Line) (# of lines) (-f <dict file> OR -p <preset>)")
     # -------- Command line processing complete ---------------------------------------------------
-    print(generate_sequence((10, 5), alphabet_dict={'a': .01, 'b': .03}))
+
+    if preset != "":
+        print(generate_sequence((10, 5), default_mode=preset))
+
+    elif filepath != "":
+        print(generate_sequence((10, 5), filepath=filepath))
+
+    
